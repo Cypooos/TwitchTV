@@ -1,3 +1,5 @@
+__pycache__/
 *.pyc
 /venv
 /.vscode
+/core/planning/google_flow.pickle
