@@ -6,7 +6,7 @@ import configparser
 
 CONF = configparser.ConfigParser()
 CONF.read("config.conf")
-com.Out.debug("Configuration Setup")
+com.Out.debug("Configuration Loaded")
 
 from core.TVmanager import TVmanager
 

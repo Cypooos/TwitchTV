@@ -1,7 +1,28 @@
 import inspect
 from time import gmtime, strftime
+from termcolor import colored
+import colorama
+colorama.init()
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 class Log():
+
+    COLORS = {
+        "WARNING":'yellow',
+        "ERROR":'red',
+        "INFO":'green',
+        "TEST":'blue',
+        "DEBUG":"magenta"
+    }
 
     def __init__(self,**kwargs):
         self.__log_file = kwargs.get("log_file","core/com/log.txt")
@@ -21,7 +42,10 @@ class Log():
         methodCaller = stack[2][0].f_code.co_name
         log = log_type+" - ["+strftime("%Y-%m-%d %H:%M:%S", gmtime())+"] {"+str(modCaller.__name__)+"} "+str(classCaller)+str(methodCaller)+": "+str(message)
         if log_type in self.log_levels or "ALL" in self.log_levels:
-            print(("["+log_type+"] "+str(message)).replace("\n","\\n"))
+            if log_type in self.COLORS.keys():
+                print("["+colored(log_type, self.COLORS[log_type])+"] "+str(message).replace("\n","\\n"))
+            else:
+                print(("["+str(log_type)+"] "+str(message)).replace("\n","\\n"))
         with open(self.__log_file,"a") as f:
             f.write(log+"\n")
 
