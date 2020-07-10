@@ -1,6 +1,6 @@
 import core.com as com
 from core.configParser import configParser
-
+import asyncio
 import configparser
 import os
 
@@ -69,9 +69,21 @@ class ProgramLoader():
 
   def __init__(self,ProgramLoaderConf):
     self.conf = ProgramLoaderConf
+    self.player = None
+    self.planning = None
     self.programs = [Program(os.path.join(self.conf["ProgramsFolder"], o)) for o in os.listdir(self.conf["ProgramsFolder"]) if os.path.isdir(os.path.join(self.conf["ProgramsFolder"],o))]
     com.Out.debug("programs: "+", ".join([x.path for x in self.programs]))
 
+  def start(self,player,planning):
+    self.player = player
+    self.planning = planning
+
+    self.loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(self.loop)
+    result = self.loop.run_until_complete(self.player.start())
+
+    while True:
+      pass
 
   def reload(self):
     pass

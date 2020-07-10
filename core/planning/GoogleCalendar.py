@@ -88,8 +88,8 @@ class GoogleCalendarAgent():
       end = event['end'].get('dateTime', None)
       name = event.get('summary',"")
       com.Out.debug("event at "+str(start)+" finish at "+str(end)+" called "+str(name))
-      start = (datetime.fromisoformat(start) - JESUS).total_seconds()
-      end = (datetime.fromisoformat(end) - JESUS).total_seconds()
+      start = datetime.fromisoformat(start)
+      end = datetime.fromisoformat(end)
       if name == "": com.Out.error("Event with no title program for time: "+str(start))
       else:
         self.events.append(Event(start,name,end))

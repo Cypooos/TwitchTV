@@ -1,9 +1,10 @@
 /.vscode
 /core/planning/google_flow.pickle
 /core/com/log.txt
-
+/extern/mplayer/fonts/*
 # too big exemples files
 /programs/emission1/test.mp4
+/programs/emission1/test2.mp4
 
 # Illegals exemples files
 /programs/emission1/water.link

@@ -15,17 +15,18 @@ This python program allow you to stream non-stop content (both videos and direct
  - Playing special videos on top / making transition *still in construction and will  probably not be ready for a big time.*
 
 **What streaming encoder is supported (you'll need to download them):**
+ - Mplayer
  - VLC
  - FFMPEG
 
 **What streaming services is supported:**
-For now, the only true way to stream this is to record using OBS the VLC windows. This is temporary, as I'm working also on a way to stream from OBS to youtube / twitch. The FFMPEG way exist already, but it is very buggy (buffer overflow).
+For now, the only true way to stream this is to record using OBS the window. This is temporary, as I'm working also on a way to stream from OBS to youtube / twitch. The FFMPEG way exist already, but it is very buggy (buffer overflow error -accumulation of data-).
 
 ### How to add a program ?
 
 Go to the `/program` folder. In it you'll see 2 exemple of how to configure programs. For every program you want to add, you should create a folder in this `/program` folder.
 
-Every programs consist of a list of videos files that can be both in the folder or as a link to it. To add a video just drop it in the folder. To add a link one just drop a .txt file countaining a complete url (like "https://storage.googleapis.com/disruptplus_archives/Nature/Nature_air.mp4").
+Every programs consist of a list of videos files that can be both in the folder or as a link to it. To add a video just drop it in the folder. To add a link one just drop a .txt file countaining a complete url (like "https://www.youtube.com/watch?v=BGRY14znFxY" or a google storage link).
 
 If you don't want to store the program inside the folder you can add a file referenc to it. Just like the url one but you just have to sepcify "file://PATH/TO/THE/FILE". It only accept absolute paths.
 
@@ -37,7 +38,7 @@ Here's the differents parameters of `program.conf`:
  - `OnPlanEnd = Continue or Save`: If the planning system finish the program, should the program remember the place in second where he is (Save) so he can continue at the same place next time or close this one and pass to next one (Continue) 
  - `FileStart = 0`: The time to play your files from (cool for skipping intro from a premium service). It acccept floating numbers (like 3.5)
  - `ProgramName = <NAME>`: The name of your program. Use by the google calendar for exemple.
-
+ - `FPS = X`: The Framerate of the video. This is nessesarry if you use CV2player. Default value is 30.
 
 Both very useful configuration is :
  - `OnFileEnd = Next` and `OnPlanEnd = Save` or
@@ -50,7 +51,7 @@ To configure the application, you'll need to open the "config.conf" file using a
 In the `[General]` section you'll want to selcet the different modules you want to use:
  - `PlanningSystem = GoogleCalendar`: The script to use to get the planning of videos to play.
  - `ProgramLoader = classic`: The script to use to get the differents programs.
- - `Players = VLC`: The software to use to stream the videos. I exept you to use VLC because the other one are not yet implemented. It is very laggy in the switching of videos and very unstable : the project is still in devellopement. We will add the `VLC-server`, `CV2` and `Pyglet` options whitch should be more stable. `FFMPEG` is also a possibilty, but this will not show the media, direclty stream the file to twitch / youtube.
+ - `Players = VLC-server`: The software to use to stream the videos. I exept you to use VLC because the other one are not yet implemented. It might just not work, it is very laggy in the switching of videos and very unstable : the project is still in devellopement. We will add the `VLC-server`, `CV2` and `Pyglet` options whitch should be more stable. `FFMPEG` will also be a possibilty, but this will not show the media, direclty stream the file to twitch / youtube.
  - `OnTrouble = None`: How to alert if the program crash / have some trouble. *(not yet implemented)*
 
 Once thoses basic choice made, you'll need to configure eatch module individually. This should not take long.

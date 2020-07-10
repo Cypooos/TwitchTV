@@ -1,12 +1,16 @@
 from core.programLoaders.ProgramLoader import ProgramLoader
 from core.planning.GoogleCalendar import GoogleCalendarAgent
-from core.players.VLCplayer import VLCplay
+from core.players.VLCplayer import VLCplayer
+from core.players.VLCserver import VLCserverPlayer
 from core.players.CVplayer import CV2Player
 from core.players.PygletPlayer import PygletPlayer
+from core.players.playerWarper import Player
 
 import core.com as com
 
 from core.configParser import configParser
+
+import asyncio
 
 class TVmanager():
 
@@ -19,70 +23,39 @@ class TVmanager():
     "default":ProgramLoader,
   }
   STREAMINGS_SERVICES={
-    "VLC":VLCplay,
-    "VLCPlayer":VLCplay,
+    "VLC":VLCserverPlayer,
+    "VLCPlayer":VLCplayer,
+    "VLCserver":VLCserverPlayer,
+    "VLCserverPlayer":VLCserverPlayer,
+    "VLC-server":VLCserverPlayer,
+    "VLC-serverPlayer":VLCserverPlayer,
     "Pyglet":PygletPlayer,
     "PygletPlayer":PygletPlayer,
     "CV2Player":CV2Player,
     "CV2":CV2Player,
-    "VLC-server":VLCplay,
   }
-  ACTIONS_LIST = [
-    "playF",
-    "playU",
-    "pause",
-    "setTime",
-    "addText",
-    "setVolume",
-    "getTime",
-    "getMax"
-  ]
 
   def __init__(self,conf):
     self.allConf = conf
     self.conf = self.allConf["General"]
     self.reloadModules()
+    self.loop = None
 
   def reloadModules(self):
     com.Out.info("Reloading internal modules")
-    self.planningModule = self.PLANNINGS_SYSTEMS.get(self.conf.get(self.conf['PlanningSystem'],None),GoogleCalendarAgent)
-    self.programsLoader = self.PROGRAMS_LOADERS.get(self.conf.get(self.conf['ProgramLoader'],None),ProgramLoader)
-    self.streamingService = self.STREAMINGS_SERVICES.get(self.conf.get(self.conf['Player'],None),VLCplay)
+    self.planningModule = self.PLANNINGS_SYSTEMS.get(self.conf.get('PlanningSystem',None),GoogleCalendarAgent)
+    self.programsLoader = self.PROGRAMS_LOADERS.get(self.conf.get('ProgramLoader',None),ProgramLoader)
+    self.player = Player(self.STREAMINGS_SERVICES.get(self.conf.get('Player',None),VLCserverPlayer))
 
     com.Out.debug("Instantiate classes")
     self.planningModule = self.planningModule(configParser(self.allConf[self.planningModule.CONF_NAME],self.planningModule))
     self.programsLoader = self.programsLoader(configParser(self.allConf[self.programsLoader.CONF_NAME],self.programsLoader))
-    self.streamingService = self.streamingService(configParser(self.allConf[self.streamingService.CONF_NAME],self.streamingService))
+    self.player.instantiate(configParser(self.allConf[self.player.CONF_NAME],self.player.playerClass))
 
   def start(self):
     # for test purpose
     self.planningModule.reloadEvents()
-    self.programsLoader.start(self.toStreamingAction,self.planningModule.getNext)
+    self.programsLoader.start(self.player,self.planningModule)
+    return
+    
 
-  def toStreamingAction(self,action,*params):
-    com.Out.debug("Taking command '"+action+"'"+" ".join(params))
-    if not action in self.streamingService.ACTIONS:
-      com.Out.warning("The ProgramLoader wanted to do '"+action+"' but the Streaming service didn't supported it.")
-      return False
-    elif not action in self.ACTIONS_LIST:
-      com.Out.warning("The ProgramLoader wanted to do '"+action+"' this action does not exist.")
-      return False
-    elif action == "playF":
-      return self.streamingService.playF(*params)
-    elif action == "playU":
-      return self.streamingService.playU(*params)
-    elif action == "pause":
-      return self.streamingService.pause(*params)
-    elif action == "setTime":
-      return self.streamingService.setTime(*params)
-    elif action == "addText":
-      return self.streamingService.addText(*params)
-    elif action == "setVolume":
-      return self.streamingService.setVolume(*params)
-    elif action == "getTime": # float sec
-      return self.streamingService.getTime(*params)
-    elif action == "getMax": # float sec
-      return self.streamingService.getMax(*params)
-    else:
-      com.Out.warning("Command not yet defined but existing '"+action+"'")
-      return False

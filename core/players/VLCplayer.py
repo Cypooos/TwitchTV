@@ -1,5 +1,7 @@
-import core.players.vlc as vlc
 #import vlc as vlc
+
+# CAN NOT WORK
+
 import time
 #
 # instressting for RTMP support : Instance.vlm_add_broadcast()
@@ -38,7 +40,7 @@ while True:
 
 import os
 
-class VLCplay():
+class VLCplayer():
 
   CONF_NEED = {
     "Hide":bool
@@ -54,6 +56,8 @@ class VLCplay():
   ]
 
   def __init__(self,conf):
+    #import core.players.vlc as vlc
+    import vlc
     self.conf = conf
     self.instance = vlc.Instance()
     self.player=self.instance.media_player_new()
@@ -89,7 +93,7 @@ class VLCplay():
 
 
 if __name__ == "__main__":
-  t = VLCplay({"HideVLC":False})
+  t = VLCplayer({"HideVLC":False})
   t.play("https://storage.googleapis.com/disruptplus_archives/Nature/Nature_Desert.mp4",300)
   time.sleep(20)
   t.play("https://storage.googleapis.com/disruptplus_archives/Nature/Nature_waves.mp4",300)
