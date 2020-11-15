@@ -26,7 +26,6 @@ try:
     except Exception as e:
       com.Out.error("Crash in code : "+str(e))
       com.Out.betterCrash(e)
-      raise e
       exit()
 except SystemExit as e:
   com.Out.info("System exit with code : "+str(e))

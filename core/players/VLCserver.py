@@ -36,6 +36,7 @@ class VLCserverPlayer():
     self.serverUrl = 'http://' + self.conf['Host'] + ':' + str(self.conf['Port'])
     self.process = None
     self.session = requests.session()
+    self.session.auth = ('', conf['Pass'])
 
   def check_connection(self, retries=0):
     for i in range(retries, -1, -1):

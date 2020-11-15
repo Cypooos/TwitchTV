@@ -95,3 +95,7 @@ class GoogleCalendarAgent():
         self.events.append(Event(start,name,end))
         com.Out.debug("Conversion done: "+str(start)+" finish at "+str(end)+" called "+str(name))
     return self.events
+  
+  def getActive(self):
+    self.reloadEvents()
+    return self.events[0]
