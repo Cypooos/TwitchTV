@@ -3,7 +3,7 @@ from core.configParser import configParser
 import asyncio
 import configparser
 import os
-
+import time
 
 class Program():
 
@@ -81,9 +81,13 @@ class ProgramLoader():
     self.loop = asyncio.new_event_loop()
     asyncio.set_event_loop(self.loop)
     result = self.loop.run_until_complete(self.player.start())
+    com.Out.debug("Starting main thread.")
 
+    self.player.empty()
+    self.player.add("C:\\Users\\Cyp\\Desktop\\code\\Python\\Applications\\Video\\TwitchTV\\programs\\emission1\\test2.mp4")
+    self.player.next()
     while True:
-      pass
+      self.planning.getActive()
+      print(self.player.status())
+      time.sleep(20)
 
-  def reload(self):
-    pass
